@@ -17,6 +17,7 @@ function doGet(e) {
 }
 // Public functions must be exported as named exports
 export {
+  doGet,
   onOpen,
   openDialog,
   getSheetsData,
