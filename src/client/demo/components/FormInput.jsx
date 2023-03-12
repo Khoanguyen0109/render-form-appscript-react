@@ -5,8 +5,8 @@ import { Button, Form, Input } from 'antd';
 const FormInput = ({ submitNewSheet }) => {
   const onFinish = (values) => {
     if (values.length === 0) return;
-
-    submitNewSheet(values);
+    console.log('values', values);
+    // submitNewSheet(values);
   };
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
