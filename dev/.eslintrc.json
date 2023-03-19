@@ -24,7 +24,6 @@
     }
   },
   "rules": {
-    "prettier/prettier": "error",
     "react/prop-types": "warn",
     "camelcase": "warn",
     "import/prefer-default-export": "warn",

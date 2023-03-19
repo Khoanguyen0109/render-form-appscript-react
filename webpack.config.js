@@ -151,7 +151,26 @@ const clientConfig = ({ isDevClientWrapper }) => ({
       // we could add support for scss here
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader'],
+        use: ['style-loader', 'css-loader', 'postcss-loader', 'less-loader'],
+      },
+      {
+        test: /\.less$/i,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+          },
+          {
+            loader: 'less-loader',
+            options: {
+              lessOptions: {
+                javascriptEnabled: true,
+              },
+            },
+          },
+        ],
       },
     ],
   },
