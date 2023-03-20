@@ -4,7 +4,6 @@ const Aside = Styled.aside`
   width: 100%;
   height: 100vh;
   position: relative;
-  background-image: url("https://png.pngtree.com/thumb_back/fh260/background/20201026/pngtree-futuristic-shape-abstract-background-chemistry-technology-concept-for-website-image_438818.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: left top;
@@ -65,7 +64,7 @@ const AuthWrapper = Styled.div`
   @media only screen and (max-width: 1599px){
     padding: 25px;
   }
-
+  
   @media only screen and (max-width: 767px){
     text-align: center;
   }
@@ -161,7 +160,7 @@ const AuthWrapper = Styled.div`
     .social-login{
       display: flex;
       align-items: center;
-      margin: -6px -6px 14px -6px;
+      margin: -6px;
       @media only screen and (max-width: 767px){
         justify-content: center;
       }
@@ -182,6 +181,7 @@ const AuthWrapper = Styled.div`
           border-radius: 6px;
           height: 48px;
           padding: 0 15px;
+          border: 1px solid ${({ theme }) => theme['border-color-light']};
           background: ${({ theme }) => theme['bg-color-light']};
           color: ${({ theme }) => theme['text-color']};
           font-weight: 500;
@@ -220,55 +220,6 @@ const AuthWrapper = Styled.div`
             color: #03A9F4;
           }
         }
-      }
-    }
-    .auth0-login{
-      margin: -6px;
-      display: flex;
-      flex-wrap: wrap;
-      a{
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 6px;
-          height: 48px;
-          padding: 0 30px;
-          background: ${({ theme }) => theme['bg-color-light']};
-          color: ${({ theme }) => theme['text-color']};
-          font-weight: 500;
-          border: 0 none;
-          border-radius: 5px;
-          margin: 6px;
-          flex: 1;
-          @media (max-width:480px){
-            flex: none;
-            width: 100%;
-          }
-      }
-    }
-  }
-  .auth0-login{
-      margin: -6px;
-      display: flex;
-      flex-wrap: wrap;
-      a{
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 6px;
-          height: 48px;
-          padding: 0 30px;
-          background: ${({ theme }) => theme['bg-color-light']};
-          color: ${({ theme }) => theme['text-color']};
-          font-weight: 500;
-          border: 0 none;
-          border-radius: 5px;
-          margin: 6px;
-          flex: 1;
-          @media (max-width:480px){
-            flex: none;
-            width: 100%;
-          }
       }
     }
   }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Avatar } from 'antd';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import FeatherIcon from 'feather-icons-react';
 import { InfoWraper, NavAuth, UserDropDwon } from './auth-info-style';
 import Message from './message';
@@ -11,17 +11,10 @@ import Support from './support';
 import { Popover } from '../../popup/popup';
 import { Dropdown } from '../../dropdown/dropdown';
 import { logOut } from '../../../redux/authentication/actionCreator';
-import { fbAuthLogout } from '../../../redux/firebase/auth/actionCreator';
 import Heading from '../../heading/heading';
 
 function AuthInfo() {
   const dispatch = useDispatch();
-  const { isAuthenticate } = useSelector(state => {
-    return {
-      isAuthenticate: state.fb.auth.uid,
-    };
-  });
-
   const [state, setState] = useState({
     flag: 'english',
   });
@@ -29,18 +22,14 @@ function AuthInfo() {
 
   const SignOut = e => {
     e.preventDefault();
-    if (isAuthenticate) {
-      dispatch(fbAuthLogout(dispatch(logOut())));
-    } else {
-      dispatch(logOut());
-    }
+    dispatch(logOut());
   };
 
   const userContent = (
     <UserDropDwon>
       <div className="user-dropdwon">
         <figure className="user-dropdwon__info">
-          <img src={require('../../../static/img/avatar/chat-auth.png')} alt="" />
+          {/* <img src={require('../../../static/img/avatar/chat-auth.png')} alt="" /> */}
           <figcaption>
             <Heading as="h5">Abdullah Bin Talha</Heading>
             <p>UI Expert</p>
@@ -90,19 +79,19 @@ function AuthInfo() {
   const country = (
     <NavAuth>
       <Link onClick={() => onFlagChangeHandle('english')} to="#">
-        <img src={require('../../../static/img/flag/english.png')} alt="" />
+        {/* <img src={require('../../../static/img/flag/english.png')} alt="" /> */}
         <span>English</span>
       </Link>
       <Link onClick={() => onFlagChangeHandle('germany')} to="#">
-        <img src={require('../../../static/img/flag/germany.png')} alt="" />
+        {/* <img src={require('../../../static/img/flag/germany.png')} alt="" /> */}
         <span>Germany</span>
       </Link>
       <Link onClick={() => onFlagChangeHandle('spain')} to="#">
-        <img src={require('../../../static/img/flag/spain.png')} alt="" />
+        {/* <img src={require('../../../static/img/flag/spain.png')} alt="" /> */}
         <span>Spain</span>
       </Link>
       <Link onClick={() => onFlagChangeHandle('turky')} to="#">
-        <img src={require('../../../static/img/flag/turky.png')} alt="" />
+        {/* <img src={require('../../../static/img/flag/turky.png')} alt="" /> */}
         <span>Turky</span>
       </Link>
     </NavAuth>
@@ -118,7 +107,7 @@ function AuthInfo() {
       <div className="nav-author">
         <Dropdown placement="bottomRight" content={country} trigger="click">
           <Link to="#" className="head-example">
-            <img src={require(`../../../static/img/flag/${flag}.png`)} alt="" />
+            Flag
           </Link>
         </Dropdown>
       </div>

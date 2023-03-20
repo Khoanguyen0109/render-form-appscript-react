@@ -1,6 +1,4 @@
 const actions = {
-  ME_BEGIN: 'ME_BEGIN',
-  ME_END: 'ME_END',
   LOGIN_BEGIN: 'LOGIN_BEGIN',
   LOGIN_SUCCESS: 'LOGIN_SUCCESS',
   LOGIN_ERR: 'LOGIN_ERR',
@@ -46,17 +44,6 @@ const actions = {
     return {
       type: actions.LOGOUT_ERR,
       err,
-    };
-  },
-
-  meBegin: () => {
-    return {
-      type: actions.ME_BEGIN,
-    };
-  },
-  meEnd: () => {
-    return {
-      type: actions.ME_END,
     };
   },
 };

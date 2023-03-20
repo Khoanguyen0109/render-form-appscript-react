@@ -72,7 +72,7 @@ function MessageBox() {
             <li>
               <Link to="#">
                 <figure className="atbd-top-dropdwon__content">
-                  <img src={require('../../../static/img/avatar/NoPath.png')} alt="" />
+                  {/* <img src={require('../../../static/img/avatar/NoPath.png')} alt="" /> */}
                   <figcaption>
                     <Heading as="h5">
                       Software <span className="color-success">3 hrs ago</span>
@@ -90,7 +90,7 @@ function MessageBox() {
             <li>
               <Link to="#">
                 <figure className="atbd-top-dropdwon__content">
-                  <img src={require('../../../static/img/avatar/NoPath.png')} alt="" />
+                  {/* <img src={require('../../../static/img/avatar/NoPath.png')} alt="" /> */}
                   <figcaption>
                     <Heading as="h5">
                       Software <span className="color-success">3 hrs ago</span>
@@ -108,7 +108,7 @@ function MessageBox() {
             <li>
               <Link to="#">
                 <figure className="atbd-top-dropdwon__content">
-                  <img src={require('../../../static/img/avatar/NoPath.png')} alt="" />
+                  {/* <img src={require('../../../static/img/avatar/NoPath.png')} alt="" /> */}
                   <figcaption>
                     <Heading as="h5">
                       Software <span className="color-success">3 hrs ago</span>
@@ -126,7 +126,7 @@ function MessageBox() {
             <li>
               <Link to="#">
                 <figure className="atbd-top-dropdwon__content">
-                  <img src={require('../../../static/img/avatar/NoPath.png')} alt="" />
+                  {/* <img src={require('../../../static/img/avatar/NoPath.png')} alt="" /> */}
                   <figcaption>
                     <Heading as="h5">
                       Software <span className="color-success">3 hrs ago</span>
@@ -144,7 +144,7 @@ function MessageBox() {
             <li>
               <Link to="#">
                 <figure className="atbd-top-dropdwon__content">
-                  <img src={require('../../../static/img/avatar/NoPath.png')} alt="" />
+                  {/* <img src={require('../../../static/img/avatar/NoPath.png')} alt="" /> */}
                   <figcaption>
                     <Heading as="h5">
                       Software <span className="color-success">3 hrs ago</span>

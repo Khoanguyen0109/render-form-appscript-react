@@ -2,12 +2,10 @@ import React from 'react';
 import propTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { USER_STATUS } from '../../contants';
 
 function ProtectedRoute({ component, path }) {
-  const user = useSelector((state) => state.auth.user);
-  console.log('user && user.status === USER_STATUS.ACTIVE :>> ', user && user.status === USER_STATUS.ACTIVE);
-  return user && user.status === USER_STATUS.ACTIVE ? <Route component={component} path={path} /> : <Redirect to="/" />;
+  const isLoggedIn = useSelector(state => state.auth.login);
+  return isLoggedIn ? <Route component={component} path={path} /> : <Redirect to="/" />;
 }
 
 ProtectedRoute.propTypes = {
