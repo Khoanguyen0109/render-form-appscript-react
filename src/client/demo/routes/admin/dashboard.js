@@ -41,18 +41,14 @@ function DashboardRoutes() {
         exact
         path={path}
         component={() => (
-          <Project
-            list={list}
-            setList={setList}
-            loading={loading}
-          />
+          <Project list={list} setList={setList} loading={loading} />
         )}
       />
       <Route
         exact
         path={`${path}/:formId`}
         component={() => (
-          <FormDetail data={data} loading={loading} />
+          <FormDetail list={list} data={data} loading={loading} />
         )}
       />
     </Switch>

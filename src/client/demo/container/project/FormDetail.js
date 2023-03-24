@@ -24,9 +24,8 @@ import { Main } from '../styled';
 function FormDetail(props) {
   const { enqueueSnackbar } = useSnackbar();
 
-  const { submittedFormId, data, loading } = props;
+  const { formIdSubmitted, data, list, loading } = props;
   const params = useParams();
-  const { formIdSubmitted } = params;
   const history = useHistory();
   const [current, setCurrent] = useState(0);
   const [formData, setFormData] = useState({});
@@ -110,16 +109,18 @@ function FormDetail(props) {
 
   return (
     <>
-      <Drawer
-        title="Basic Drawer"
-        placement="right"
-        closable={false}
-        onClose={onClose}
-        open={open}
-        size='large'
-      >
-        <ReferForm/>
-      </Drawer>
+      {!formIdSubmitted && (
+        <Drawer
+          title="Biểu mẫu liên quan"
+          placement="right"
+          closable={false}
+          onClose={onClose}
+          open={open}
+          size="large"
+        >
+          <ReferForm />
+        </Drawer>
+      )}
       <PageHeader
         ghost
         title={formName}
