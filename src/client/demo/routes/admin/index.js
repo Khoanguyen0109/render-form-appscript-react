@@ -18,6 +18,7 @@ const Admin = () => {
         }
       >
         <Route path={path} component={Dashboard} />
+
       </Suspense>
     </Switch>
   );

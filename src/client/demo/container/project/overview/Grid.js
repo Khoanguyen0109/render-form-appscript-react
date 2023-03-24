@@ -6,8 +6,9 @@ import Heading from '../../../components/heading/heading';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { ProjectPagination } from '../style';
 
-function Grid() {
-  const project = useSelector(state => state.projects.data);
+function Grid(props) {
+  const { data, loading } = props;
+  const project = useSelector((state) => state.projects.data);
   const [state, setState] = useState({
     projects: project,
     current: 0,
@@ -34,19 +35,18 @@ function Grid() {
 
   return (
     <Row gutter={25}>
-      {projects.length ? (
-        projects.map(value => {
+      {loading ? (
+        [...Array(10).keys()].map((key) => (
+          <Cards key={key} headless>
+            <Skeleton active />
+          </Cards>
+        ))
+      ) : data.length ? (
+        data.map((value) => {
           return (
             <Col key={value.id} xl={8} md={12} xs={24}>
-              <Suspense
-                fallback={
-                  <Cards headless>
-                    <Skeleton active />
-                  </Cards>
-                }
-              >
-                <GridCard value={value} />
-              </Suspense>
+              <GridCard value={value} />
+              {/* <div>list</div> */}
             </Col>
           );
         })
@@ -57,20 +57,6 @@ function Grid() {
           </Cards>
         </Col>
       )}
-      <Col xs={24} className="pb-30">
-        <ProjectPagination>
-          {projects.length ? (
-            <Pagination
-              onChange={onHandleChange}
-              showSizeChanger
-              onShowSizeChange={onShowSizeChange}
-              pageSize={10}
-              defaultCurrent={1}
-              total={40}
-            />
-          ) : null}
-        </ProjectPagination>
-      </Col>
     </Row>
   );
 }

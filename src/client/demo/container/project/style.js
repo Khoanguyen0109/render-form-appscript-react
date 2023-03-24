@@ -38,6 +38,18 @@ const ProjectSorting = Styled.div`
             .ant-select-selection-search{
                 width: 100% !important;
             }
+            .ant-input-affix-wrapper{
+                border-top-left-radius: 20px;
+                border-bottom-left-radius: 20px;
+
+            }
+            .ant-input-group-addon{
+                .ant-input-search-button{
+                    border-top-right-radius: 20px;
+                    border-bottom-right-radius: 20px;
+                }
+        
+            }
         }
     }
     @media (max-width: 1500px){

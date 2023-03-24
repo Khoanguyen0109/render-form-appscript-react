@@ -4,6 +4,7 @@ import { Provider, useSelector } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
+import { SnackbarProvider } from 'notistack';
 import store from './redux/store';
 import Admin from './routes/admin';
 import Auth from './routes/auth';
@@ -58,7 +59,9 @@ function ProviderConfig() {
 function App() {
   return (
     <Provider store={store}>
-      <ProviderConfig />
+      <SnackbarProvider>
+        <ProviderConfig />
+      </SnackbarProvider>
     </Provider>
   );
 }

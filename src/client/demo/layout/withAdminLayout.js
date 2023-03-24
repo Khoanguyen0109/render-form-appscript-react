@@ -172,13 +172,11 @@ const ThemeLayout = (WrappedComponent) => {
                 >
                   {!topMenu || window.innerWidth <= 991 ? (
                     <Button type="link" onClick={toggleCollapsed}>
-                      {/* <img
-                        src={require(`../static/img/icon/${
-                          collapsed ? 'right.svg' : 'left.svg'
-                        }`)}
-                        alt="menu"
-                      /> */}
-                      {collapsed ? <FeatherIcon icon="hamburger" /> : <FeatherIcon icon="hamburger" />}
+                      {collapsed ? (
+                        <FeatherIcon icon="menu" />
+                      ) : (
+                        <FeatherIcon icon="menu" />
+                      )}
                     </Button>
                   ) : null}
                   <Link

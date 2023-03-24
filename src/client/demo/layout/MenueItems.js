@@ -44,7 +44,7 @@ const MenuItems = ({ darkMode, toggleCollapsed, topMenu }) => {
     >
       <Menu.Item key="home">
         <NavLink onClick={toggleCollapsed} to={`${path}`}>
-          Dashboard
+          Tạo Form
         </NavLink>
       </Menu.Item>
     </Menu>

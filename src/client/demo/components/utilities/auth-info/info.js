@@ -4,10 +4,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import FeatherIcon from 'feather-icons-react';
 import { InfoWraper, NavAuth, UserDropDwon } from './auth-info-style';
-import Message from './message';
-import Notification from './notification';
-import Settings from './settings';
-import Support from './support';
+
 import { Popover } from '../../popup/popup';
 import { Dropdown } from '../../dropdown/dropdown';
 import { logOut } from '../../../redux/authentication/actionCreator';
@@ -20,7 +17,7 @@ function AuthInfo() {
   });
   const { flag } = state;
 
-  const SignOut = e => {
+  const SignOut = (e) => {
     e.preventDefault();
     dispatch(logOut());
   };
@@ -28,40 +25,6 @@ function AuthInfo() {
   const userContent = (
     <UserDropDwon>
       <div className="user-dropdwon">
-        <figure className="user-dropdwon__info">
-          {/* <img src={require('../../../static/img/avatar/chat-auth.png')} alt="" /> */}
-          <figcaption>
-            <Heading as="h5">Abdullah Bin Talha</Heading>
-            <p>UI Expert</p>
-          </figcaption>
-        </figure>
-        <ul className="user-dropdwon__links">
-          <li>
-            <Link to="#">
-              <FeatherIcon icon="user" /> Profile
-            </Link>
-          </li>
-          <li>
-            <Link to="#">
-              <FeatherIcon icon="settings" /> Settings
-            </Link>
-          </li>
-          <li>
-            <Link to="#">
-              <FeatherIcon icon="dollar-sign" /> Billing
-            </Link>
-          </li>
-          <li>
-            <Link to="#">
-              <FeatherIcon icon="users" /> Activity
-            </Link>
-          </li>
-          <li>
-            <Link to="#">
-              <FeatherIcon icon="bell" /> Help
-            </Link>
-          </li>
-        </ul>
         <Link className="user-dropdwon__bottomAction" onClick={SignOut} to="#">
           <FeatherIcon icon="log-out" /> Sign Out
         </Link>
@@ -69,7 +32,7 @@ function AuthInfo() {
     </UserDropDwon>
   );
 
-  const onFlagChangeHandle = value => {
+  const onFlagChangeHandle = (value) => {
     setState({
       ...state,
       flag: value,
@@ -99,19 +62,6 @@ function AuthInfo() {
 
   return (
     <InfoWraper>
-      <Message />
-      <Notification />
-
-      <Settings />
-      <Support />
-      <div className="nav-author">
-        <Dropdown placement="bottomRight" content={country} trigger="click">
-          <Link to="#" className="head-example">
-            Flag
-          </Link>
-        </Dropdown>
-      </div>
-
       <div className="nav-author">
         <Popover placement="bottomRight" content={userContent} action="click">
           <Link to="#" className="head-example">

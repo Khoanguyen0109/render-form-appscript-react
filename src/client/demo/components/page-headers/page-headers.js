@@ -22,6 +22,7 @@ const PageHeader = props => {
           breadcrumb={routes && { routes }}
           extra={buttons}
           ghost={ghost}
+          {...props}
         />
       </div>
     </>

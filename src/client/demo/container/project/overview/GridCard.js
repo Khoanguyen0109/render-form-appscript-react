@@ -1,22 +1,25 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import { Progress, Tag } from 'antd';
 import FeatherIcon from 'feather-icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Dropdown } from '../../../components/dropdown/dropdown';
 import { textRefactor } from '../../../components/utilities/utilities';
 import { ProjectCard } from '../style';
 
-function GridCard({ value }) {
-  const { id, title, status, content, percentage } = value;
+function GridCard({ isListRoute, value }) {
+  const { path } = useRouteMatch();
+  console.log('path :>> ', path);
+  const { idform, name_form, status, desp_form  } = value;
   return (
     <ProjectCard>
       <Cards headless>
         <div className="project-top">
           <div className="project-title">
             <h1>
-              <Link to={`/admin/project/projectDetails/${id}`}>{title}</Link>
+              <Link to={`${path}/${idform}`}>{name_form}</Link>
               <Tag className={status}>{status}</Tag>
             </h1>
             <Dropdown
@@ -34,7 +37,7 @@ function GridCard({ value }) {
               </Link>
             </Dropdown>
           </div>
-          <p className="project-desc">{textRefactor(content, 13)}</p>
+          <p className="project-desc">{textRefactor(desp_form, 13)}</p>
           <div className="project-timing">
             <div>
               <span>Start Date</span>
@@ -44,15 +47,6 @@ function GridCard({ value }) {
               <span>Deadline</span>
               <strong>18 Mar 2020</strong>
             </div>
-          </div>
-          <div className="project-progress">
-            <Progress
-              percent={status === 'complete' ? 100 : percentage}
-              strokeWidth={5}
-              status="primary"
-              className="progress-primary"
-            />
-            <p>12/15 Task Completed</p>
           </div>
         </div>
       </Cards>

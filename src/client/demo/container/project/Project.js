@@ -1,9 +1,11 @@
-import React, { useState, Suspense } from 'react';
+import React, { useState, Suspense, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Spin, Select } from 'antd';
-import { Switch, NavLink, Route, Link } from 'react-router-dom';
+import { Row, Col, Spin, Select, Input } from 'antd';
+import { Switch, NavLink, Route, Link, useRouteMatch } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
 import propTypes from 'prop-types';
+import axios from 'axios';
+import { debounce } from 'lodash';
 import { ProjectHeader, ProjectSorting } from './style';
 import Grid from './overview/Grid';
 import List from './overview/List';
@@ -11,51 +13,42 @@ import { AutoComplete } from '../../components/autoComplete/autoComplete';
 import { Main } from '../styled';
 import { PageHeader } from '../../components/page-headers/page-headers';
 
-function Project({ match }) {
+const { Search } = Input;
+
+function Project(props) {
+  const { path } = useRouteMatch();
+  const { list, loading } = props;
   const dispatch = useDispatch();
-  const project = useSelector((state) => state.projects.data);
 
-  const { path } = match;
-  const [state, setState] = useState({
-    visible: false,
-    categoryActive: 'all',
-  });
-
-  const { notData, visible } = state;
-  const handleSearch = (searchText) => {
-    // const data = searchData.filter((item) =>
-    //   item.title.toUpperCase().startsWith(searchText.toUpperCase())
-    // );
-    // setState({
-    //   ...state,
-    //   notData: data,
-    // });
-  };
-
-  const onSorting = (selectedItems) => {
-    // dispatch(sortingProjectByCategory(selectedItems));
-  };
-
+  const [search, setSearch] = useState('');
+  const [category, setCategory] = useState('all');
+  const [data, setData] = useState(list);
   const onChangeCategory = (value) => {
-    setState({
-      ...state,
-      categoryActive: value,
-    });
-    // dispatch(filterProjectByStatus(value));
+    setCategory(value);
   };
+  // const debouncedSearch = React.useRef(
+  //   debounce(async (criteria) => {
+  //     console.log('criteria', criteria);
+  //     setList(list.filter((d) => d.name_form.toLowerCase().includes(criteria)));
+  //   }, 300)
+  // ).current;
 
-  const showModal = () => {
-    setState({
-      ...state,
-      visible: true,
-    });
-  };
-
-  const onCancel = () => {
-    setState({
-      ...state,
-      visible: false,
-    });
+  // const handleSearch = (e) => {
+  //   setSearch(e.target.value);
+  //   if (e.target.value) {
+  //     debouncedSearch(e.target.value);
+  //   }
+  // };
+  // console.log('search', search);
+  // const filterList = async () => {};
+  const onSearch = (value) => {
+    // setSearch(value);
+    console.log('value :>> ', value);
+    if (value) {
+      setData(list.filter((d) => d.name_form.toLowerCase().includes(value)));
+    } else {
+      setData(list);
+    }
   };
 
   return (
@@ -64,7 +57,7 @@ function Project({ match }) {
         <PageHeader
           ghost
           title="Biểu mẫu"
-          subTitle={<>Tổng số biểu mẫu {project.length}</>}
+          subTitle={<>Tổng số biểu mẫu {data.length}</>}
         />
       </ProjectHeader>
       <Main>
@@ -76,11 +69,7 @@ function Project({ match }) {
                   <nav>
                     <ul>
                       <li
-                        className={
-                          state.categoryActive === 'all'
-                            ? 'active'
-                            : 'deactivate'
-                        }
+                        className={category === 'all' ? 'active' : 'deactivate'}
                       >
                         <Link onClick={() => onChangeCategory('all')} to="#">
                           All
@@ -88,9 +77,7 @@ function Project({ match }) {
                       </li>
                       <li
                         className={
-                          state.categoryActive === 'progress'
-                            ? 'active'
-                            : 'deactivate'
+                          category === 'progress' ? 'active' : 'deactivate'
                         }
                       >
                         <Link
@@ -102,9 +89,7 @@ function Project({ match }) {
                       </li>
                       <li
                         className={
-                          state.categoryActive === 'complete'
-                            ? 'active'
-                            : 'deactivate'
+                          category === 'complete' ? 'active' : 'deactivate'
                         }
                       >
                         <Link
@@ -116,9 +101,7 @@ function Project({ match }) {
                       </li>
                       <li
                         className={
-                          state.categoryActive === 'late'
-                            ? 'active'
-                            : 'deactivate'
+                          category === 'late' ? 'active' : 'deactivate'
                         }
                       >
                         <Link onClick={() => onChangeCategory('late')} to="#">
@@ -127,9 +110,7 @@ function Project({ match }) {
                       </li>
                       <li
                         className={
-                          state.categoryActive === 'early'
-                            ? 'active'
-                            : 'deactivate'
+                          category === 'early' ? 'active' : 'deactivate'
                         }
                       >
                         <Link onClick={() => onChangeCategory('early')} to="#">
@@ -140,10 +121,12 @@ function Project({ match }) {
                   </nav>
                 </div>
                 <div className="project-sort-search">
-                  <AutoComplete
-                    onSearch={handleSearch}
+                  <Search
+                    // value={search}
+                    onSearch={onSearch}
                     placeholder="Tìm kiếm"
                     patterns
+                    allowClear
                   />
                 </div>
                 <div className="project-sort-group">
@@ -179,9 +162,12 @@ function Project({ match }) {
                     </div>
                   }
                 >
-                  <Route path={path} component={Grid} exact />
-                  <Route path={`${path}/grid`} component={Grid} />
-                  <Route path={`${path}/list`} component={List} />
+                  <Route
+                    path={path}
+                    component={() => <Grid data={data} {...props} />}
+                    exact
+                  />
+         
                 </Suspense>
               </Switch>
             </div>
