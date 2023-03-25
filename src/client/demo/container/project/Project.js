@@ -18,38 +18,24 @@ const { Search } = Input;
 function Project(props) {
   const { path } = useRouteMatch();
   const { list, loading } = props;
-  const dispatch = useDispatch();
-
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
   const [data, setData] = useState(list);
   const onChangeCategory = (value) => {
     setCategory(value);
   };
-  // const debouncedSearch = React.useRef(
-  //   debounce(async (criteria) => {
-  //     console.log('criteria', criteria);
-  //     setList(list.filter((d) => d.name_form.toLowerCase().includes(criteria)));
-  //   }, 300)
-  // ).current;
 
-  // const handleSearch = (e) => {
-  //   setSearch(e.target.value);
-  //   if (e.target.value) {
-  //     debouncedSearch(e.target.value);
-  //   }
-  // };
-  // console.log('search', search);
-  // const filterList = async () => {};
   const onSearch = (value) => {
     // setSearch(value);
-    console.log('value :>> ', value);
     if (value) {
       setData(list.filter((d) => d.name_form.toLowerCase().includes(value)));
     } else {
       setData(list);
     }
   };
+  useEffect(() => {
+    setData(list);
+  }, [list]);
 
   return (
     <>
@@ -154,22 +140,7 @@ function Project(props) {
               </div>
             </ProjectSorting>
             <div>
-              <Switch>
-                <Suspense
-                  fallback={
-                    <div className="spin">
-                      <Spin />
-                    </div>
-                  }
-                >
-                  <Route
-                    path={path}
-                    component={() => <Grid data={data} {...props} />}
-                    exact
-                  />
-         
-                </Suspense>
-              </Switch>
+              <Grid data={data} {...props} />
             </div>
           </Col>
         </Row>

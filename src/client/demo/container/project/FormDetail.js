@@ -23,8 +23,30 @@ import { Main } from '../styled';
 
 function FormDetail(props) {
   const { enqueueSnackbar } = useSnackbar();
-
-  const { formIdSubmitted, data, list, loading } = props;
+  const [list, setList] = useState([]);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  console.log('list :>> ', list);
+  const getList = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(
+        'https://script.google.com/macros/s/AKfycbwc6zsfumMrVjMwaSnku8NZxL2t5WJjtBK2LlXSkzx1CGptTvtjc4EBl5sBxnYqXJdgXQ/exec'
+      );
+      setData(res.data.data);
+      const unique = [
+        ...new Map(res.data.data.map((item) => [item.idform, item])).values(),
+      ];
+      setList(unique);
+    } catch (error) {
+      console.log('error', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    getList();
+  }, []);
   const params = useParams();
   const history = useHistory();
   const [current, setCurrent] = useState(0);
@@ -94,11 +116,6 @@ function FormDetail(props) {
     marginTop: 16,
   };
 
-  useEffect(() => {
-    if (formIdSubmitted) {
-      /// Setform
-    }
-  }, []);
   const showDrawer = () => {
     setOpen(true);
   };
@@ -109,18 +126,17 @@ function FormDetail(props) {
 
   return (
     <>
-      {!formIdSubmitted && (
-        <Drawer
-          title="Biểu mẫu liên quan"
-          placement="right"
-          closable={false}
-          onClose={onClose}
-          open={open}
-          size="large"
-        >
-          <ReferForm />
-        </Drawer>
-      )}
+      <Drawer
+        title="Biểu mẫu liên quan"
+        placement="right"
+        closable={false}
+        onClose={onClose}
+        open={open}
+        size="large"
+      >
+        <ReferForm />
+      </Drawer>
+
       <PageHeader
         ghost
         title={formName}
@@ -131,6 +147,7 @@ function FormDetail(props) {
           </Button>,
         ]}
       />
+
       <Main>
         <Row gutter={15}>
           <Col xs={24}>
@@ -145,7 +162,14 @@ function FormDetail(props) {
                   />
                 }
               >
-                <div style={contentStyle}>{steps[current].content}</div>
+                {' '}
+                {loading ? (
+                  <div style={contentStyle}>
+                    <Spin />
+                  </div>
+                ) : (
+                  <div style={contentStyle}>{steps[current]?.content}</div>
+                )}
               </Card>
             </AddUser>
           </Col>

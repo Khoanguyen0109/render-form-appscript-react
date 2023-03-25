@@ -180,6 +180,7 @@ const clientConfig = ({ isDevClientWrapper }) => ({
 // these settings help us load 'react', 'react-dom' and the packages defined below from a CDN
 // see https://github.com/enuchi/React-Google-Apps-Script#adding-new-libraries-and-packages
 const DynamicCdnWebpackPluginConfig = {
+  exclude: ['antd', 'react-router-dom'],
   // set "verbose" to true to print console logs on CDN usage while webpack builds
   verbose: false,
   resolver: (packageName, packageVersion, options) => {
@@ -250,12 +251,13 @@ const DynamicCdnWebpackPluginConfig = {
           url: `https://unpkg.com/@types/react@${packageVersion}/index.d.ts`,
         };
       // return defaults/null depending if Dynamic CDN plugin finds package
+
       case 'antd':
         return {
           name: packageName,
           var: 'antd',
           version: packageVersion,
-          url: `https://unpkg.com/antd@${packageVersion}dist/antd${packageSuffix}`,
+          url: 'https://unpkg.com/browse/antd@4.23.4/dist/antd.min.js',
         };
       default:
         return moduleDetails;

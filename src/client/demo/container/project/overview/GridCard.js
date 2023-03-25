@@ -19,7 +19,7 @@ function GridCard({ isListRoute, value }) {
         <div className="project-top">
           <div className="project-title">
             <h1>
-              <Link to={`${path}/${idform}`}>{name_form}</Link>
+              <Link to={`/admin/${idform}`}>{name_form}</Link>
               <Tag className={status}>{status}</Tag>
             </h1>
             <Dropdown

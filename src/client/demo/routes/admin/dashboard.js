@@ -1,11 +1,12 @@
+import { Spin } from 'antd';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { useRouteMatch } from 'react-router-dom/cjs/react-router-dom.min';
+import FormDetail2 from '../../container/project/FormDetail2';
 
-import Dashboard from '../../container/dashboard';
-import FormDetail from '../../container/project/FormDetail';
-import DetailTab from '../../container/project/overview/DetailTab';
+// import FormDetail from '../../container/project/FormDetail';
+// import DetailTab from '../../container/project/overview/DetailTab';
 import Project from '../../container/project/Project';
 
 function DashboardRoutes() {
@@ -37,20 +38,28 @@ function DashboardRoutes() {
   }, []);
   return (
     <Switch>
-      <Route
-        exact
-        path={path}
-        component={() => (
-          <Project list={list} setList={setList} loading={loading} />
-        )}
-      />
-      <Route
-        exact
-        path={`${path}/:formId`}
-        component={() => (
-          <FormDetail list={list} data={data} loading={loading} />
-        )}
-      />
+      <Suspense
+        fallback={
+          <div className="spin">
+            <Spin />
+          </div>
+        }
+      >
+        {/* <Route exact path={`${path}/:formId`} component={FormDetail2} /> */}
+        <Route
+          exact
+          path={path}
+          render={() => (
+            <Project list={list} setList={setList} loading={loading} />
+          )}
+          // render={() => <FormDetail2 />}
+        />
+        {/* <Route
+          exact
+          path={`${path}/:formId`}
+          render={() => <FormDetail2 />}
+        ></Route> */}
+      </Suspense>
     </Switch>
   );
 }
