@@ -134,7 +134,7 @@ function FormDetail(props) {
         open={open}
         size="large"
       >
-        <ReferForm />
+        <ReferForm data={data} list={list} />
       </Drawer>
 
       <PageHeader

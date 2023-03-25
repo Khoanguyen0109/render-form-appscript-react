@@ -11,8 +11,9 @@ const { TextArea } = Input;
 
 function DetailTab(props) {
   const { items, formData, idx, isLast, onSubmit, onBackTab } = props;
-
+  console.log('items', items);
   const [form] = Form.useForm();
+  console.log('form :>> ', form);
   const handleSubmit = (values) => {
     console.log('value', values);
     onSubmit(values);
@@ -28,7 +29,10 @@ function DetailTab(props) {
       rules: [
         { required: i.require === 'TRUE', message: 'Vui lòng nhập ô này' },
       ],
+      // eslint-disable-next-line no-eval
+      // hidden: i.condition_true !=='' ? eval(i.condition_true) : false
     };
+    console.log('itemProps :>> ', itemProps);
     switch (i.field) {
       case 'input':
         return (
@@ -94,6 +98,7 @@ function DetailTab(props) {
       return switchItem(i, index);
     });
   };
+    console.log('form.getFieldValue', Form.useWatch('Giới_tính', form))
   return (
     <Row justify="center">
       <Col xl={10} md={16} xs={24}>
@@ -106,6 +111,16 @@ function DetailTab(props) {
               onFinish={handleSubmit}
               initialValues={formData}
             >
+              {idx === 0 && (
+                <Form.Item
+                  label="Tên Form"
+                  name="form_name"
+                  rules={[{ required: true, message: 'Vui lòng nhập ô này' }]}
+                  hidden={Form.useWatch('Giới_tính', form) === 1}
+                >
+                  <Input placeholder={'Ten Form '} />
+                </Form.Item>
+              )}
               {Object.values(items).map((item) => renderItem(item))}
 
               <Form.Item>

@@ -7,7 +7,7 @@ import ViewForm from './ViewForm';
 const { Search } = Input;
 
 function ReferForm(props) {
-  const { list } = props;
+  const { list, data } = props;
   const projects = useSelector((state) => state.projects.data);
   const columns = [
     {
@@ -34,23 +34,26 @@ function ReferForm(props) {
     <Row gutter={25}>
       <Col xs={24}>
         <Card headless>
-          <Search
-            placeholder="Tìm kiếm biểu mẫu"
-            //   onSearch={onSearch}
-            style={{ width: '100%' , marginBottom: '20px' }}
-          />
           {!formSelected && (
-            <ProjectList>
-              <div className="table-responsive">
-                <Table
-                  pagination={false}
-                  dataSource={dataSource}
-                  columns={columns}
-                />
-              </div>
-            </ProjectList>
+            <>
+              <Search
+                placeholder="Tìm kiếm biểu mẫu"
+                //   onSearch={onSearch}
+                style={{ width: '100%', marginBottom: '20px' }}
+              />
+              <ProjectList>
+                <div className="table-responsive">
+                  <Table
+                    pagination={false}
+                    dataSource={dataSource}
+                    columns={columns}
+                  />
+                </div>
+              </ProjectList>
+            </>
           )}
           <ViewForm
+            formTemplateData={data}
             reset={reset}
             formSelected={formSelected}
           />
