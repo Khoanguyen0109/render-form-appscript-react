@@ -8,6 +8,8 @@ import {
   useParams,
   Link,
 } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+
 import FeatherIcon from 'feather-icons-react';
 import propTypes from 'prop-types';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
@@ -15,17 +17,21 @@ import { groupBy, mapValues } from 'lodash';
 import qs from 'qs';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
+import { useSelector } from 'react-redux';
 import { AddUser } from './overview/style';
 import DetailTab from './overview/DetailTab';
 import ReferForm from './ReferForm';
 import { PageHeader } from '../../components/page-headers/page-headers';
 import { Main } from '../styled';
+import { serverFunctions } from '../../../utils/serverFunctions';
+import { format } from 'date-fns';
 
 function FormDetail(props) {
   const { enqueueSnackbar } = useSnackbar();
   const [list, setList] = useState([]);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const user = useSelector((state) => state.auth.login);
   console.log('list :>> ', list);
   const getList = async () => {
     try {
@@ -67,25 +73,39 @@ function FormDetail(props) {
   );
 
   const next = (value) => {
-    setFormData({ ...value, formData });
+    console.log('value :>> ', value);
+    setFormData({ ...value, ...formData });
     setCurrent(current + 1);
   };
-
   const prev = () => {
     setCurrent(current - 1);
   };
   const onSubmit = async () => {
-    const options = {
-      method: 'POST',
-      headers: { 'content-type': 'application/x-www-form-urlencoded' },
-      data: qs.stringify(formData),
-      url: 'https://script.google.com/macros/s/AKfycbwc6zsfumMrVjMwaSnku8NZxL2t5WJjtBK2LlXSkzx1CGptTvtjc4EBl5sBxnYqXJdgXQ/exec',
-    };
-    console.log('options :>> ', options);
-    await axios(options);
+    const formId = uuidv4();
+
+    const rows = [];
+    Object.keys(formData).map((key) => {
+      const rowItem = [formId, key, formData[key]];
+      rows.push(rowItem);
+    });
+    const rangeForm = 'Form Sumit!A2';
+    const rangeValues = 'Form Values!A2';
+    const spreadsheetId = '1QChy36UZeI144jl5NrCASWJsi5s74M28F1iwfcYInnE';
+    const values = [
+      [
+        formId,
+        params.formId,
+        formName,
+        user.username,
+        format(new Date(), 'dd/MM/yyyy , HH:mm'),
+      ],
+    ];
+
+    serverFunctions.mainAppendData(values, spreadsheetId, rangeForm);
+    serverFunctions.mainAppendData(rows, spreadsheetId, rangeValues);
     setFormData({});
     enqueueSnackbar('Gửi biểu mẫu thành công', { variant: 'success' });
-    history.push('/');
+    history.push('/admin');
   };
 
   const steps = Object.values(groupByField).map((tab, idx) => {
@@ -103,6 +123,13 @@ function FormDetail(props) {
       ),
     };
   });
+
+  const addRows = () => {
+    // const range = 'Form Sumit!A2';
+    // const spreadsheetId = '1QChy36UZeI144jl5NrCASWJsi5s74M28F1iwfcYInnE';
+    // const values = [];
+    // serverFunctions.mainAppendData(values, spreadsheetId, range);
+  };
 
   const items = Object.keys(groupByField).map((item, index) => ({
     key: index,
@@ -134,13 +161,13 @@ function FormDetail(props) {
         open={open}
         size="large"
       >
-        <ReferForm data={data} list={list} />
+        <ReferForm open={open} data={data} list={list} />
       </Drawer>
 
       <PageHeader
         ghost
         title={formName}
-        onBack={() => window.history.back()}
+        onBack={onBack}
         buttons={[
           <Button onClick={showDrawer} type="primary" key="3">
             Tìm kiếm form liên quan

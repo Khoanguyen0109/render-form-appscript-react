@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Provider, useSelector } from 'react-redux';
+import { Provider, useSelector, useDispatch } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
-import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  useHistory,
+} from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import { SnackbarProvider } from 'notistack';
 import store from './redux/store';
@@ -12,14 +17,16 @@ import './static/css/style.css';
 import config from './config/config';
 import ProtectedRoute from './components/utilities/protectedRoute';
 import 'antd/dist/antd.less';
-
+import actions from './redux/authentication/actions';
+import { serverFunctions } from '../utils/serverFunctions';
 const { theme } = config;
 
 function ProviderConfig() {
-  const { rtl, isLoggedIn, topMenu, darkMode } = useSelector((state) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const { isLoggedIn, topMenu, darkMode } = useSelector((state) => {
     return {
       darkMode: state.ChangeLayoutMode.data,
-      rtl: state.ChangeLayoutMode.rtlData,
       topMenu: state.ChangeLayoutMode.topMenu,
       isLoggedIn: state.auth.login,
     };
@@ -36,21 +43,39 @@ function ProviderConfig() {
     return () => (unmounted = true);
   }, [setPath]);
 
+  const getUser = async () => {
+    const username = localStorage.getItem('username');
+    if (username) {
+      const range = 'user!A2:C';
+      const result = await serverFunctions.mainReadData(
+        '1QChy36UZeI144jl5NrCASWJsi5s74M28F1iwfcYInnE',
+        range
+      );
+      const match = result.find((item) => item[1] === username);
+
+      dispatch(actions.loginSuccess({ id: match[0], username }));
+    }
+  };
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      history.push('/admin');
+    }
+  }, [isLoggedIn]);
   return (
-    <ConfigProvider direction={rtl ? 'rtl' : 'ltr'}>
-      <ThemeProvider theme={{ ...theme, rtl, topMenu, darkMode }}>
-        <Router basename={process.env.PUBLIC_URL}>
-          {!isLoggedIn ? (
-            <Route path="/" component={Auth} />
-          ) : (
-            <ProtectedRoute path="/admin" component={Admin} />
-          )}
-          {isLoggedIn &&
-            (path === process.env.PUBLIC_URL ||
-              path === `${process.env.PUBLIC_URL}/`) && (
-              <Redirect to="/admin" />
-            )}
-        </Router>
+    <ConfigProvider>
+      <ThemeProvider theme={{ ...theme, topMenu, darkMode }}>
+        {!isLoggedIn ? (
+          <Route path="/" component={Auth} />
+        ) : (
+          <ProtectedRoute path="/admin" component={Admin} />
+        )}
+        {isLoggedIn &&
+          (path === process.env.PUBLIC_URL ||
+            path === `${process.env.PUBLIC_URL}/`) && <Redirect to="/admin" />}
       </ThemeProvider>
     </ConfigProvider>
   );
@@ -59,8 +84,10 @@ function ProviderConfig() {
 function App() {
   return (
     <Provider store={store}>
-      <SnackbarProvider>
-        <ProviderConfig />
+      <SnackbarProvider autoHideDuration={2000}>
+        <Router basename={process.env.PUBLIC_URL}>
+          <ProviderConfig />
+        </Router>
       </SnackbarProvider>
     </Provider>
   );

@@ -1224,6 +1224,11 @@ const AddUser = Styled.div`
   .ant-form-item{
     height: 76px
   }
+  @media only screen and (max-width: 375px){
+    .ant-form-item{
+      height: auto
+    }
+  }
   .ant-input{
     font-size: 14px;
     padding: 12px 11px;

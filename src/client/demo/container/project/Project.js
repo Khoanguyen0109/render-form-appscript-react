@@ -28,7 +28,7 @@ function Project(props) {
   const onSearch = (value) => {
     // setSearch(value);
     if (value) {
-      setData(list.filter((d) => d.name_form.toLowerCase().includes(value)));
+      setData(list.filter((d) => d.name_form.toLowerCase().includes(value.toLowerCase())));
     } else {
       setData(list);
     }

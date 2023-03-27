@@ -38,7 +38,7 @@ const HeaderSearch = ({ darkMode }) => {
   return (
     <>
       <Div className="certain-category-search-wrapper" style={{ width: '100%' }} darkMode={darkMode}>
-        <Row className="ant-row-middle">
+        {/* <Row className="ant-row-middle">
           <Col md={2} xs={1} className={rtl ? 'text-left' : 'text-right'}>
             <span className="certain-category-icon">
               <FeatherIcon icon="search" size={16} />
@@ -54,7 +54,7 @@ const HeaderSearch = ({ darkMode }) => {
               <Input placeholder="Search..." onInput={search} />
             </Popover>
           </Col>
-        </Row>
+        </Row> */}
       </Div>
     </>
   );

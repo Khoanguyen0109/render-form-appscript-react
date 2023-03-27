@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import { serverFunctions } from '../src/client/utils/serverFunctions.ts';
+import { serverFunctions } from '../src/client/utils/serverFunctions';
 
 const { FILENAME, PORT } = process.env;
 

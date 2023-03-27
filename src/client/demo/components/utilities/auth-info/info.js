@@ -20,6 +20,7 @@ function AuthInfo() {
   const SignOut = (e) => {
     e.preventDefault();
     dispatch(logOut());
+    localStorage.removeItem('username')
   };
 
   const userContent = (
