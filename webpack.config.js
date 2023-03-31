@@ -180,7 +180,7 @@ const clientConfig = ({ isDevClientWrapper }) => ({
 // these settings help us load 'react', 'react-dom' and the packages defined below from a CDN
 // see https://github.com/enuchi/React-Google-Apps-Script#adding-new-libraries-and-packages
 const DynamicCdnWebpackPluginConfig = {
-  exclude: ['antd', 'react-router-dom'],
+  exclude: ['antd', 'react-router-dom', 'react-router'],
   // set "verbose" to true to print console logs on CDN usage while webpack builds
   verbose: false,
   resolver: (packageName, packageVersion, options) => {

@@ -19,6 +19,7 @@ import ProtectedRoute from './components/utilities/protectedRoute';
 import 'antd/dist/antd.less';
 import actions from './redux/authentication/actions';
 import { serverFunctions } from '../utils/serverFunctions';
+
 const { theme } = config;
 
 function ProviderConfig() {
@@ -60,11 +61,11 @@ function ProviderConfig() {
     getUser();
   }, []);
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      history.push('/admin');
-    }
-  }, [isLoggedIn]);
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     history.push('/admin');
+  //   }
+  // }, [isLoggedIn]);
   return (
     <ConfigProvider>
       <ThemeProvider theme={{ ...theme, topMenu, darkMode }}>

@@ -1,10 +1,11 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { Button, Card, Col, Input, Row, Table, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import FeatherIcon from 'feather-icons-react';
+import axios from 'axios';
 import { ProjectList } from './style';
 import ViewForm from './ViewForm';
-import { serverFunctions } from '../../../utils/serverFunctions';
-import FeatherIcon from 'feather-icons-react';
 
 const { Search } = Input;
 
@@ -37,26 +38,12 @@ function ReferForm(props) {
   const dataSource = [];
 
   const getForms = async () => {
-    const range = 'Form Sumit!A2:E';
-
-    const result = await serverFunctions.mainReadData(
-      '1QChy36UZeI144jl5NrCASWJsi5s74M28F1iwfcYInnE',
-      range
-    );
-    const formGroup = [];
-    result.forEach((item) => {
-      console.log('item', item)
-      const form = {
-        formId: item[0],
-        idFormTemplate: item[1],
-        formName: item[2],
-        username: item[3],
-        createdDate: item[4],
-      };
-      formGroup.push(form);
-    });
-    setDefaultFormList(formGroup);
-    setFormList(formGroup);
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_API_END_POINT}/api/form-list`);
+      console.log('res', res);
+    } catch (error) {
+      console.log('error', error);
+    }
   };
   useEffect(() => {
     getForms();
@@ -67,18 +54,17 @@ function ReferForm(props) {
   if (formList.length)
     formList.map((value) => {
       const { formId, idFormTemplate, formName, username, createdDate } = value;
-      console.log('createdDate :>> ', createdDate);
       return dataSource.push({
         key: formId,
         formName: (
-          <p
+          <Typography
             onClick={() => {
               setFormSelected(formId);
               setFormTemplateIdSelected(idFormTemplate);
             }}
           >
             {formName}
-          </p>
+          </Typography>
         ),
         username,
         createdDate,
@@ -88,11 +74,7 @@ function ReferForm(props) {
   const onSearch = (value) => {
     // setSearch(value);
     if (value) {
-      setFormList(
-        defaultFormList.filter((d) =>
-          d.formName.toLowerCase().includes(value.toLowerCase())
-        )
-      );
+      setFormList(defaultFormList.filter((d) => d.formName.toLowerCase().includes(value.toLowerCase())));
     } else {
       setSearch('');
       setFormList(defaultFormList);
@@ -101,25 +83,17 @@ function ReferForm(props) {
   const onChange = (e) => {
     setSearch(e.target.value);
   };
-  const formSelectedName = formList.find(
-    (form) => form.formId === formSelected
-  )?.formName;
+  const formSelectedName = formList.find((form) => form.formId === formSelected)?.formName;
   return (
     <Row gutter={25}>
       <Col xs={24}>
         {formSelected && (
           <div style={{ display: 'flex' }}>
             {' '}
-            <Button
-              type="text"
-              style={{ padding: 0, marginBottom: '12px', marginRight: '8px' }}
-              onClick={reset}
-            >
+            <Button type="text" style={{ padding: 0, marginBottom: '12px', marginRight: '8px' }} onClick={reset}>
               <FeatherIcon size={16} icon="arrow-left" />
             </Button>
-            <Typography style={{ fontWeight: 500 }}>
-              {formSelectedName}
-            </Typography>
+            <Typography style={{ fontWeight: 500 }}>{formSelectedName}</Typography>
           </div>
         )}
 
@@ -132,14 +106,10 @@ function ReferForm(props) {
               onSearch={onSearch}
               style={{ width: '100%', marginBottom: '20px' }}
             />
-            
+
             <ProjectList>
               <div className="table-responsive">
-                <Table
-                  pagination={false}
-                  dataSource={dataSource}
-                  columns={columns}
-                />
+                <Table pagination={false} dataSource={dataSource} columns={columns} />
               </div>
             </ProjectList>
           </>

@@ -1,13 +1,6 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { Row, Col, Spin, Card, Button, Steps, Drawer } from 'antd';
-import {
-  Switch,
-  Route,
-  NavLink,
-  useRouteMatch,
-  useParams,
-  Link,
-} from 'react-router-dom';
+import { Switch, Route, NavLink, useRouteMatch, useParams, Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import FeatherIcon from 'feather-icons-react';
@@ -18,31 +11,27 @@ import qs from 'qs';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { useSelector } from 'react-redux';
+import { format } from 'date-fns';
 import { AddUser } from './overview/style';
 import DetailTab from './overview/DetailTab';
 import ReferForm from './ReferForm';
 import { PageHeader } from '../../components/page-headers/page-headers';
 import { Main } from '../styled';
-import { serverFunctions } from '../../../utils/serverFunctions';
-import { format } from 'date-fns';
 
 function FormDetail(props) {
   const { enqueueSnackbar } = useSnackbar();
   const [list, setList] = useState([]);
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const user = useSelector((state) => state.auth.login);
-  console.log('list :>> ', list);
+  const [loading, setLoading] = useState(false);
   const getList = async () => {
     try {
       setLoading(true);
       const res = await axios.get(
-        'https://script.google.com/macros/s/AKfycbwc6zsfumMrVjMwaSnku8NZxL2t5WJjtBK2LlXSkzx1CGptTvtjc4EBl5sBxnYqXJdgXQ/exec'
+        // 'https://script.google.com/macros/s/AKfycbwc6zsfumMrVjMwaSnku8NZxL2t5WJjtBK2LlXSkzx1CGptTvtjc4EBl5sBxnYqXJdgXQ/exec'
+        `https://render-form.herokuapp.com/api/form-template`,
       );
       setData(res.data.data);
-      const unique = [
-        ...new Map(res.data.data.map((item) => [item.idform, item])).values(),
-      ];
+      const unique = [...new Map(res.data.data.map((item) => [item.id_form_template, item])).values()];
       setList(unique);
     } catch (error) {
       console.log('error', error);
@@ -58,19 +47,19 @@ function FormDetail(props) {
   const [current, setCurrent] = useState(0);
   const [formData, setFormData] = useState({});
   const [open, setOpen] = useState(false);
-  const formFields = data.filter((item) => item.idform === params.formId);
+  const formFields = data.filter((item) => item.id_form_template === params.formId);
   const formName = formFields[0]?.name_form;
   const onBack = () => {
-    history.goBack();
+    history.push('/admin');
   };
-  const grouped = mapValues(groupBy(formFields, 'steps'), (clist) => clist);
+  const user = useSelector((state) => state.auth.login);
+  console.log('user', user)
+  const grouped = mapValues(groupBy(formFields, 'step'), (clist) => clist);
   //   var grouped = mapValues(groupBy(formFields, 'steps'), (clist) =>
   //   clist.map((item) => mapValues(groupBy(item, 'name_field'), (item) => item))
   // );
 
-  const groupByField = Object.values(grouped).map((item) =>
-    groupBy(item, 'name_field')
-  );
+  const groupByField = Object.values(grouped).map((item) => groupBy(item, 'name_field'));
 
   const next = (value) => {
     console.log('value :>> ', value);
@@ -85,24 +74,23 @@ function FormDetail(props) {
 
     const rows = [];
     Object.keys(formData).map((key) => {
-      const rowItem = [formId, key, formData[key]];
+      const rowItem = {
+        id_form: formId,
+        id_field: key,
+        value: formData[key],
+      };
       rows.push(rowItem);
+      return {};
     });
-    const rangeForm = 'Form Sumit!A2';
-    const rangeValues = 'Form Values!A2';
-    const spreadsheetId = '1QChy36UZeI144jl5NrCASWJsi5s74M28F1iwfcYInnE';
-    const values = [
-      [
-        formId,
-        params.formId,
-        formName,
-        user.username,
-        format(new Date(), 'dd/MM/yyyy , HH:mm'),
-      ],
-    ];
 
-    serverFunctions.mainAppendData(values, spreadsheetId, rangeForm);
-    serverFunctions.mainAppendData(rows, spreadsheetId, rangeValues);
+    const res = await axios.post(`${process.env.REACT_APP_API_END_POINT}/api/form`, {
+      formId,
+      formName,
+      userId: user.id,
+      userName: user.username,
+      idFormTemplate: params.formId,
+      data: rows,
+    });
     setFormData({});
     enqueueSnackbar('Gửi biểu mẫu thành công', { variant: 'success' });
     history.push('/admin');
@@ -153,14 +141,7 @@ function FormDetail(props) {
 
   return (
     <>
-      <Drawer
-        title="Biểu mẫu liên quan"
-        placement="right"
-        closable={false}
-        onClose={onClose}
-        open={open}
-        size="large"
-      >
+      <Drawer title="Biểu mẫu liên quan" placement="right" closable={false} onClose={onClose} open={open} size="large">
         <ReferForm open={open} data={data} list={list} />
       </Drawer>
 
@@ -179,16 +160,7 @@ function FormDetail(props) {
         <Row gutter={15}>
           <Col xs={24}>
             <AddUser>
-              <Card
-                title={
-                  <Steps
-                    size="small"
-                    className=""
-                    current={current}
-                    items={items}
-                  />
-                }
-              >
+              <Card title={<Steps size="small" className="" current={current} items={items} />}>
                 {' '}
                 {loading ? (
                   <div style={contentStyle}>

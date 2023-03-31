@@ -947,6 +947,9 @@ const BasicFormWrapper = Styled.div`
             color: #9299B8;
         }
     }
+    .ant-form-item {
+        height: auto
+    }
     .ant-form-item-control-input{
         min-height: auto !important;
     }

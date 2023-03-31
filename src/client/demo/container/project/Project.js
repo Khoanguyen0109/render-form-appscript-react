@@ -1,15 +1,12 @@
-import React, { useState, Suspense, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Spin, Select, Input } from 'antd';
-import { Switch, NavLink, Route, Link, useRouteMatch } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Row, Col, Input } from 'antd';
+import { NavLink, Link, useRouteMatch } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
 import propTypes from 'prop-types';
 import axios from 'axios';
-import { debounce } from 'lodash';
 import { ProjectHeader, ProjectSorting } from './style';
 import Grid from './overview/Grid';
-import List from './overview/List';
-import { AutoComplete } from '../../components/autoComplete/autoComplete';
+
 import { Main } from '../styled';
 import { PageHeader } from '../../components/page-headers/page-headers';
 
@@ -17,10 +14,30 @@ const { Search } = Input;
 
 function Project(props) {
   const { path } = useRouteMatch();
-  const { list, loading } = props;
-  const [search, setSearch] = useState('');
+  const [list, setList] = useState([]);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const getList = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(
+        // 'https://script.google.com/macros/s/AKfycbwc6zsfumMrVjMwaSnku8NZxL2t5WJjtBK2LlXSkzx1CGptTvtjc4EBl5sBxnYqXJdgXQ/exec'
+        `https://render-form.herokuapp.com/api/form-template`,
+      );
+      setData(res.data.data);
+      const unique = [...new Map(res.data.data.map((item) => [item.id_form_template, item])).values()];
+      setList(unique);
+    } catch (error) {
+      console.log('error', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    getList();
+  }, []);
   const [category, setCategory] = useState('all');
-  const [data, setData] = useState(list);
+  const [formList, setFormList] = useState([]);
   const onChangeCategory = (value) => {
     setCategory(value);
   };
@@ -28,23 +45,19 @@ function Project(props) {
   const onSearch = (value) => {
     // setSearch(value);
     if (value) {
-      setData(list.filter((d) => d.name_form.toLowerCase().includes(value.toLowerCase())));
+      setFormList(list.filter((d) => d.name_form.toLowerCase().includes(value.toLowerCase())));
     } else {
-      setData(list);
+      setFormList(list);
     }
   };
   useEffect(() => {
-    setData(list);
+    setFormList(list);
   }, [list]);
 
   return (
     <>
       <ProjectHeader>
-        <PageHeader
-          ghost
-          title="Biểu mẫu"
-          subTitle={<>Tổng số biểu mẫu {data.length}</>}
-        />
+        <PageHeader ghost title="Biểu mẫu" subTitle={<>Tổng số biểu mẫu {data.length}</>} />
       </ProjectHeader>
       <Main>
         <Row gutter={25}>
@@ -52,59 +65,35 @@ function Project(props) {
             <ProjectSorting>
               <div className="project-sort-bar">
                 <div className="project-sort-nav">
-                  <nav>
+                  {/* <nav>
                     <ul>
-                      <li
-                        className={category === 'all' ? 'active' : 'deactivate'}
-                      >
+                      <li className={category === 'all' ? 'active' : 'deactivate'}>
                         <Link onClick={() => onChangeCategory('all')} to="#">
                           All
                         </Link>
                       </li>
-                      <li
-                        className={
-                          category === 'progress' ? 'active' : 'deactivate'
-                        }
-                      >
-                        <Link
-                          onClick={() => onChangeCategory('progress')}
-                          to="#"
-                        >
+                      <li className={category === 'progress' ? 'active' : 'deactivate'}>
+                        <Link onClick={() => onChangeCategory('progress')} to="#">
                           In Progress
                         </Link>
                       </li>
-                      <li
-                        className={
-                          category === 'complete' ? 'active' : 'deactivate'
-                        }
-                      >
-                        <Link
-                          onClick={() => onChangeCategory('complete')}
-                          to="#"
-                        >
+                      <li className={category === 'complete' ? 'active' : 'deactivate'}>
+                        <Link onClick={() => onChangeCategory('complete')} to="#">
                           Complete
                         </Link>
                       </li>
-                      <li
-                        className={
-                          category === 'late' ? 'active' : 'deactivate'
-                        }
-                      >
+                      <li className={category === 'late' ? 'active' : 'deactivate'}>
                         <Link onClick={() => onChangeCategory('late')} to="#">
                           Late
                         </Link>
                       </li>
-                      <li
-                        className={
-                          category === 'early' ? 'active' : 'deactivate'
-                        }
-                      >
+                      <li className={category === 'early' ? 'active' : 'deactivate'}>
                         <Link onClick={() => onChangeCategory('early')} to="#">
                           Early
                         </Link>
                       </li>
                     </ul>
-                  </nav>
+                  </nav> */}
                 </div>
                 <div className="project-sort-search">
                   <Search
@@ -140,7 +129,7 @@ function Project(props) {
               </div>
             </ProjectSorting>
             <div>
-              <Grid data={data} {...props} />
+              <Grid data={formList} loading={loading} {...props} />
             </div>
           </Col>
         </Row>

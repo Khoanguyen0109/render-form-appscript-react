@@ -4,6 +4,7 @@ const Aside = Styled.aside`
   width: 100%;
   height: 100vh;
   position: relative;
+  colo: 'white';
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: left top;
@@ -49,11 +50,16 @@ const Content = Styled.div`
       text-align: center;
     }
     .auth-content-figure{
-      @media only screen and (max-width: 1199px){
-        max-width: 420px;
+      @media only screen and (max-width: 3000px){
+        object-fit: fill;
+        max-width: 620px;
+        height: 420px;
       }
       @media only screen and (max-width: 991px){
+        object-fit: fill;
         max-width: 100%;
+        height: 320px;
+
       }
     }
 `;
@@ -99,6 +105,7 @@ const AuthWrapper = Styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+
     form{
       width: 420px;
       h1{

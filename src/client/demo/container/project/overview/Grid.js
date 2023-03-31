@@ -8,30 +8,6 @@ import { ProjectPagination } from '../style';
 
 function Grid(props) {
   const { data, loading } = props;
-  const project = useSelector((state) => state.projects.data);
-  const [state, setState] = useState({
-    projects: project,
-    current: 0,
-    pageSize: 0,
-  });
-  const { projects } = state;
-
-  useEffect(() => {
-    if (project) {
-      setState({
-        projects: project,
-      });
-    }
-  }, [project]);
-
-  const onShowSizeChange = (current, pageSize) => {
-    setState({ ...state, current, pageSize });
-  };
-
-  const onHandleChange = (current, pageSize) => {
-    // You can create pagination in here
-    setState({ ...state, current, pageSize });
-  };
 
   return (
     <Row gutter={25}>
@@ -44,7 +20,7 @@ function Grid(props) {
       ) : data.length ? (
         data.map((value) => {
           return (
-            <Col key={value.id} xl={8} md={12} xs={24}>
+            <Col key={value.id_form_template} xl={8} md={12} xs={24}>
               <GridCard value={value} />
               {/* <div>list</div> */}
             </Col>

@@ -4,40 +4,13 @@ import React, { useState } from 'react';
 import { Row, Col, Form, Input, Upload, Select, DatePicker, Radio } from 'antd';
 import { Link } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
+import { every, some, trim } from 'lodash';
 import { BasicFormWrapper } from '../../styled';
 import { Button } from '../../../components/buttons/buttons';
 import Heading from '../../../components/heading/heading';
-import { every, some, trim } from 'lodash';
 
 const { Option } = Select;
 const { TextArea } = Input;
-
-const comparisonOperatorsHash = {
-  '<': function (a, b) {
-    return a < b;
-  },
-  '>': function (a, b) {
-    return a > b;
-  },
-  '>=': function (a, b) {
-    return a >= b;
-  },
-  '<=': function (a, b) {
-    return a <= b;
-  },
-  '=>': function (a, b) {
-    return a >= b;
-  },
-  '=<': function (a, b) {
-    return a <= b;
-  },
-  '==': function (a, b) {
-    return a == b;
-  },
-  '===': function (a, b) {
-    return a === b;
-  },
-};
 
 function DetailTab(props) {
   const { items, formData, idx, isLast, onSubmit, onBackTab } = props;
@@ -47,43 +20,15 @@ function DetailTab(props) {
   };
 
   const switchItem = (i, index) => {
-    const groupCondition = i.condition_true.split('||');
-    console.log('groupCondition :>> ', groupCondition);
-    // const mapLevel1 = [];
-
-    // if (groupCondition[0] !== '') {
-    //   const group = [];
-
-    //   groupCondition.forEach((item) => {
-    //     const group = item.split(',');
-    //     const mapLevel2 = [];
-    //     group.forEach((item) => {
-    //       const obj = trim(item).split(' ');
-    //       const key = obj[0];
-    //       const comparison = obj[1];
-    //       const condition = obj[2];
-    //       const comparisonOperator = comparisonOperatorsHash[comparison];
-    //       mapLevel2.push(
-    //         Form.useWatch(key, form) !== null &&
-    //           comparisonOperator(Form.useWatch(key, form), eval(condition))
-    //       );
-    //     });
-    //     mapLevel1.push(every(mapLevel2));
-    //   });
-    //   console.log('mapLevel1 :>> ', mapLevel1);
-    // }
-    // console.log(' !some(mapLevel1)',  !some(mapLevel1))
     const showLabel = index === 0;
     const itemProps = {
       label: showLabel && i.name_field,
-      name: i.id_field,
-      // name: showLabel
-      //   ? i.name_field.replaceAll(',', '').replaceAll(' ', '_')
-      //   : i.name_field.replaceAll(',', '').replaceAll(' ', '_') + index,
+      // name: i.id_field,
+      name: showLabel
+        ? i.name_field.replaceAll(',', '').replaceAll(' ', '_')
+        : i.name_field.replaceAll(',', '').replaceAll(' ', '_') + index,
       initialValue: '',
-      rules: [
-        { required: i.require === 'TRUE', message: 'Vui lòng nhập ô này' },
-      ],
+      rules: [{ required: i.require === 'TRUE', message: 'Vui lòng nhập ô này' }],
       // hidden: mapLevel1.length > 0 && !some(mapLevel1),
       // eslint-disable-next-line no-eval
       // hidden: i.condition_true !=='' ? eval(i.condition_true) : false
@@ -139,7 +84,6 @@ function DetailTab(props) {
     }
   };
   const renderItem = (item) => {
-    console.log('item :>> ', item);
     if (item.length > 1) {
       return (
         <div>
@@ -153,30 +97,13 @@ function DetailTab(props) {
       return switchItem(i, index);
     });
   };
-  // const check = new Function("Form.useWatch('gioi_tinh', form)")();
-  // console.log('form.getFieldValue', check());
+
   return (
     <Row justify="center">
       <Col xl={10} md={16} xs={24}>
         <div className="user-info-form">
           <BasicFormWrapper>
-            <Form
-              style={{ width: '100%' }}
-              form={form}
-              name="info"
-              onFinish={handleSubmit}
-              initialValues={formData}
-            >
-              {idx === 0 && (
-                <Form.Item
-                  label="Tên Form"
-                  name="form_name"
-                  rules={[{ required: true, message: 'Vui lòng nhập ô này' }]}
-                  hidden={Form.useWatch('gioi_tinh')}
-                >
-                  <Input placeholder={'Ten Form '} />
-                </Form.Item>
-              )}
+            <Form style={{ width: '100%' }} form={form} name="info" onFinish={handleSubmit} initialValues={formData}>
               {Object.values(items).map((item) => renderItem(item))}
 
               <Form.Item>
